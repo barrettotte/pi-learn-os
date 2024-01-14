@@ -1,28 +1,46 @@
-.global delay           // void delay(uint64_t cycles)
-.global set_word        // void set_word(uint64_t addr, uint32_t word)
-.global get_word        // uint32_t get_word(uint64_t addr)
+.global delay
+.global set_word
+.global get_word
+.global memset
+.global memcmp
+.global memcpy
+.global memmove
+.global get_el
 
-.global memset          // void memset(void* dst, int value, unsigned int size)
-.global memcmp          // void memcmp(void* a, void* b, unsigned int size)
-.global memcpy          // void memcpy(void* dst, void* src, unsigned int size)
-.global memmove         // void memmove(void* dst, void* src, unsigned int size)
-
-.global get_el          // unsigned char get_el()
-
-delay:                  // ***** delay *****
+// *****************************************************************************
+// void delay(uint64_t cycles)
+//
+// delay system for given amount of cycles
+// *****************************************************************************
+delay:                  //
     subs x0, x0, #1     // arbitrary instruction to spend cycles
     bne delay           // keep delaying if x0 > 0
     ret                 // end delay
 
-set_word:               // ***** set_word *****
+// *****************************************************************************
+// void set_word(uint64_t addr, uint32_t word)
+//
+// set word at address
+// *****************************************************************************
+set_word:               //
     str w1, [x0]        // store word at address
     ret                 // end set_word
 
-get_word:               // ***** get_word *****
+// *****************************************************************************
+// uint32_t get_word(uint64_t addr)
+//
+// fetch word at address
+// *****************************************************************************
+get_word:               //
     ldr w0, [x0]        // load word from address
     ret                 // end get_word
 
-memset:                 // ***** memset *****
+// *****************************************************************************
+// void memset(void* dst, int value, unsigned int size)
+//
+// set block of memory to given value
+// *****************************************************************************
+memset:                 //
     cmp x2, #0          // check size == 0
     beq _memset_end     // go to end if no memory left to set
 _memset_set:            //
@@ -32,7 +50,12 @@ _memset_set:            //
 _memset_end:            //
     ret                 // end memset
 
-memcmp:                 // ***** memcmp *****
+// *****************************************************************************
+// void memcmp(void* a, void* b, unsigned int size)
+//
+// compare two blocks of memory
+// *****************************************************************************
+memcmp:                 //
     mov x3, x0          // move a
     mov x0, #0          //
 _memcmp_cmp:            //
@@ -49,7 +72,13 @@ _memcmp_cmp:            //
 _memcmp_end:            //
     ret                 // end memcmp
 
-memcpy:                 // ***** memcpy *****
+// *****************************************************************************
+// void memcpy(void* dst, void* src, unsigned int size)
+//
+// copy block of memory from source to destination. 
+// memmove is essentially an alias to memcpy.
+// *****************************************************************************
+memcpy:                 //
 memmove:                // memcpy and memove same implementation
     cmp x2, #0          // check size == 0
     beq _memcpy_end     // go to end if no memory to move
@@ -80,7 +109,12 @@ _memcpy_copy:           // copy from src to dst
 _memcpy_end:            //
     ret                 // end memcpy
 
-get_el:                // ***** get_el *****
+// *****************************************************************************
+// unsigned char get_el()
+//
+// fetch current exception level
+// *****************************************************************************
+get_el:                //
     mrs x0, currentel  // get system register - exception level
     lsr x0, x0, #2     // get current exception level at bits 2-3
     ret                // end get_el
