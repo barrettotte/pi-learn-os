@@ -2,5 +2,8 @@
 *.elf
 *.img
 
+bin/
+build/
+
 .vscode/
 tmp/

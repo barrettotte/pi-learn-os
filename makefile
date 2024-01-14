@@ -3,31 +3,44 @@ CROSS := /opt/cross/gcc-arm-10.3-2021.07-x86_64-$(AARCH64)/bin
 
 AS := $(CROSS)/$(AARCH64)-as
 GCC := $(CROSS)/$(AARCH64)-gcc
+GCC_FLAGS := -Wall -O2 -ffreestanding -nostdlib -nostartfiles
 LD := $(CROSS)/$(AARCH64)-ld
 OBJCOPY := $(CROSS)/$(AARCH64)-objcopy
 QEMU := qemu-system-aarch64
 
-GCC_FLAGS = -Wall -O2 -ffreestanding -nostdinc -nostdlib -nostartfiles
+BIN_DIR  := bin
+OBJ_DIR  := build
+SRC_DIR  := .
 
-SRCS = $(wildcard *.c)
-OBJS = $(SRCS:.c=.o)
+OS := kernel8
+TARGET := $(BIN_DIR)/$(OS).img
+
+SRC_TYPES := -type f \( -iname "*.s" -o -iname "*.c" \)
+SOURCES := $(shell find ./* $(SRC_TYPES))
+OBJECTS := $(foreach OBJECT, $(patsubst %.s, %.s.o, $(patsubst %.c, %.o, $(SOURCES))), $(OBJ_DIR)/$(OBJECT))
+
+$(OBJ_DIR)/%.s.o: %.s
+	@mkdir -p $(@D)
+	$(GCC) $(GCC_FLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: %.c
+	@mkdir -p $(@D)
+	$(GCC) $(GCC_FLAGS) -c $< -o $@
+
+$(TARGET): $(OBJECTS)
+	@mkdir -p $(@D)
+	$(LD) -nostdlib $(OBJECTS) -T linker.ld -o $(BIN_DIR)/$(OS).elf
+	$(OBJCOPY) -O binary $(BIN_DIR)/$(OS).elf $(TARGET)
+
+.PHONY:	.FORCE
+.FORCE:
 
 all: build
 
-build: clean kernel8.img
-
-boot.o: boot.S
-	$(GCC) $(GCC_FLAGS) -c boot.S -o boot.o
-
-%.o: %.c
-	$(GCC) $(GCC_FLAGS) -c $< -o $@
-
-kernel8.img: boot.o $(OBJS)
-	$(LD) -nostdlib boot.o $(OBJS) -T linker.ld -o kernel8.elf
-	$(OBJCOPY) -O binary kernel8.elf kernel8.img
+build: clean $(TARGET)
 
 run: build
-	$(QEMU) -M raspi3b -kernel kernel8.img -serial null -serial stdio
+	$(QEMU) -M raspi3b -kernel $(TARGET) -serial null -serial stdio
 
 clean:
-	rm -f *.o *.elf *.img
+	rm -rf $(BIN_DIR)/* $(OBJ_DIR)/*
