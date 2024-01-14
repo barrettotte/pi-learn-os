@@ -10,7 +10,7 @@ QEMU := qemu-system-aarch64
 
 BIN_DIR  := bin
 OBJ_DIR  := build
-SRC_DIR  := .
+SRC_DIR  := src
 
 OS := kernel8
 TARGET := $(BIN_DIR)/$(OS).img
