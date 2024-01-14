@@ -13,15 +13,16 @@ OBJ_DIR  := build
 SRC_DIR  := src
 
 OS := kernel8
+TARGET_ELF := $(BIN_DIR)/$(OS).elf
 TARGET := $(BIN_DIR)/$(OS).img
 
 SRC_TYPES := -type f \( -iname "*.s" -o -iname "*.c" \)
-SOURCES := $(shell find ./* $(SRC_TYPES))
+SOURCES := $(shell find $(SRC_DIR)/* $(SRC_TYPES))
 OBJECTS := $(foreach OBJECT, $(patsubst %.s, %.s.o, $(patsubst %.c, %.o, $(SOURCES))), $(OBJ_DIR)/$(OBJECT))
 
 $(OBJ_DIR)/%.s.o: %.s
 	@mkdir -p $(@D)
-	$(GCC) $(GCC_FLAGS) -c $< -o $@
+	$(AS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(@D)
@@ -29,8 +30,8 @@ $(OBJ_DIR)/%.o: %.c
 
 $(TARGET): $(OBJECTS)
 	@mkdir -p $(@D)
-	$(LD) -nostdlib $(OBJECTS) -T linker.ld -o $(BIN_DIR)/$(OS).elf
-	$(OBJCOPY) -O binary $(BIN_DIR)/$(OS).elf $(TARGET)
+	$(LD) -nostdlib $(OBJECTS) -T linker.ld -o $(TARGET_ELF)
+	$(OBJCOPY) -O binary $(TARGET_ELF) $(TARGET)
 
 .PHONY:	.FORCE
 .FORCE:
