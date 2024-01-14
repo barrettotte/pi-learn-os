@@ -1,5 +1,6 @@
 AARCH64 := aarch64-none-elf
-CROSS := /opt/cross/gcc-arm-10.3-2021.07-x86_64-$(AARCH64)/bin
+CROSS_DIR := /opt/cross
+CROSS := $(CROSS_DIR)/gcc-arm-10.3-2021.07-x86_64-$(AARCH64)/bin
 
 AS := $(CROSS)/$(AARCH64)-as
 GCC := $(CROSS)/$(AARCH64)-gcc
@@ -45,3 +46,8 @@ run: build
 
 clean:
 	rm -rf $(BIN_DIR)/* $(OBJ_DIR)/*
+
+toolchain:
+	curl -L 'https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf.tar.xz' -o /tmp/gcc-arm-$(AARCH64).tar.xz
+	sudo mkdir -p $(CROSS_DIR)
+	sudo tar xf /tmp/gcc-arm-$(AARCH64).tar.xz -C $(CROSS_DIR)
