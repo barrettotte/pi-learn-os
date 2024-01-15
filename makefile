@@ -19,8 +19,9 @@ GCC := $(CROSS)/$(AARCH64)-gcc
 GCC_FLAGS := -Wall -Wextra -O2 -ffreestanding -nostdlib -nostartfiles
 LD := $(CROSS)/$(AARCH64)-ld
 OBJCOPY := $(CROSS)/$(AARCH64)-objcopy
+OBJDUMP := $(CROSS)/$(AARCH64)-objdump
 QEMU := qemu-system-aarch64
-QEMU_FLAGS := -M raspi3b -kernel $(TARGET) -serial null -serial stdio
+QEMU_FLAGS := -M raspi3b -kernel $(TARGET) -serial stdio
 
 $(OBJ_DIR)/%.s.o: %.s
 	@mkdir -p $(@D)
@@ -47,6 +48,10 @@ run: build
 
 clean:
 	rm -rf $(BIN_DIR)/* $(OBJ_DIR)/*
+
+dump_kernel:
+	$(OBJDUMP) -d $(TARGET_ELF) > $(BIN_DIR)/$(OS).dump
+	stat --printf="$(BIN_DIR)/$(OS).dump is %s byte(s)\n" $(BIN_DIR)/$(OS).dump
 
 toolchain:
 	@echo 'Setting up cross compiler...'

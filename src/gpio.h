@@ -1,8 +1,7 @@
 #ifndef _GPIO_H
 #define _GPIO_H
 
-// Memory mapped I/O base - Peripheral start address (physical address)
-#define MMIO_BASE 0x3F000000
+#include "mmio.h"
 
 // GPIO function select 0
 #define GPFSEL0 ((volatile unsigned int*)(MMIO_BASE + 0x00200000))

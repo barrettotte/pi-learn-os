@@ -1,52 +1,33 @@
 #ifndef _UART_H
 #define _UART_H
 
-// Auxilary enables. Used to enable the three modules; UART, SPI1, SPI2
-#define AUX_ENABLES ((volatile unsigned int*)(MMIO_BASE + 0x00215004))
+#include "mmio.h"
 
-// Mini UART I/O data
-#define AUX_MU_IO_REG ((volatile unsigned int*)(MMIO_BASE + 0x00215040))
+#define IO_BASE (MMIO_BASE + 0x200000)
 
-// Mini UART interrupt enable
-#define AUX_MU_IER_REG ((volatile unsigned int*)(MMIO_BASE + 0x00215044))
+#define UART0_DR   (IO_BASE + 0x1000)
+#define UART0_FR   (IO_BASE + 0x1018)
+#define UART0_CR   (IO_BASE + 0x1030)
+#define UART0_LCRH (IO_BASE + 0x102c)
+#define UART0_FBRD (IO_BASE + 0x1028)
+#define UART0_IBRD (IO_BASE + 0x1024)
+#define UART0_IMSC (IO_BASE + 0x1038)
+#define UART0_MIS  (IO_BASE + 0x1040)
+#define UART0_ICR  (IO_BASE + 0x1044)
 
-// Mini UART interrupt identify
-#define AUX_MU_IIR_REG ((volatile unsigned int*)(MMIO_BASE + 0x00215048))
-
-// Mini UART line control
-#define AUX_MU_LCR_REG ((volatile unsigned int*)(MMIO_BASE + 0x0021504C))
-
-// Mini UART modem control
-#define AUX_MU_MCR_REG ((volatile unsigned int*)(MMIO_BASE + 0x00215050))
-
-// Mini UART line status
-#define AUX_MU_LSR_REG ((volatile unsigned int*)(MMIO_BASE + 0x00215054))
-
-// Mini UART modem status
-#define AUX_MU_MSR_REG ((volatile unsigned int*)(MMIO_BASE + 0x00215058))
-
-// Mini UART scratch
-#define AUX_MU_SCRATCH ((volatile unsigned int*)(MMIO_BASE + 0x0021505C))
-
-// Mini UART extra control
-#define AUX_MU_CNTL_REG ((volatile unsigned int*)(MMIO_BASE + 0x00215060))
-
-// Mini UART extra status
-#define AUX_MU_STAT_REG ((volatile unsigned int*)(MMIO_BASE + 0x00215064))
-
-// Mini UART baudrate
-#define AUX_MU_BAUD_REG ((volatile unsigned int*)(MMIO_BASE + 0x00215068))
-
-// Set baud rate and characteristics (115200 8N1) and map to GPIO
+// init UART baud rate and characteristics
 void uart_init();
 
-// Send a single character to UART
+// receive a single character from UART
+unsigned int uart_recv();
+
+// send a single character to UART
 void uart_send(unsigned int c);
 
-// Receive a single character from UART
-char uart_getc();
+// write string to UART
+void uart_puts(const char* s);
 
-// Write string to UART
-void uart_puts(char *s);
+// handle UART interrupt
+void uart_handler();
 
 #endif

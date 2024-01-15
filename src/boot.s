@@ -19,7 +19,7 @@ pre_kernel:                         // ***** prepare before kernel entry *****
         mov x0, #(1 << 31)          // set 32nd bit
         msr hcr_el2, x0             // set execution state of EL1 to AArch64
 
-        mov x0, #0b1111000101       // last 4 bits (0101) is SP_EL1 mode
+        mov x0, #0b1111000101       // set PSTATE, last 4 bits (0101) is SP_EL1 mode
         msr spsr_el2, x0            // set EL2 saved program status register
         adr x0, el1_entry           // address to return to after switching to EL1
         msr elr_el2, x0             // load return address
@@ -28,6 +28,9 @@ pre_kernel:                         // ***** prepare before kernel entry *****
 el1_entry:                          // 
         ldr x1, =_start             // 
         mov sp, x1                  // init stack pointer
+
+        ldr x0, =vector_table       //
+        msr vbar_el1, x0            // init vector base address register for EL1
 
         ldr x1, =__bss_start        // 
         ldr w2, =__bss_size         // 
@@ -38,5 +41,5 @@ bss_clear:                          // init stack segment data
         cbnz w2, bss_clear          // continue clearing stack segment if w2 != 0
 
 kernel_entry:                       // ***** enter kernel *****
-        bl main                     // enter kernel main, should not return
+        bl kmain                    // enter kernel main
         b halt                      // halt core just in case

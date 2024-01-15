@@ -12,13 +12,16 @@ static int uint_to_hex(char* buffer, int pos, uint64_t uint) {
         uint /= 16;
     } while (uint != 0);
 
+    // prefix
+    buffer[pos++] = '0';
+    buffer[pos++] = 'x';
+
     // reverse the buffer
     for (int i = size-1; i >= 0; i--) {
         buffer[pos++] = digits_buffer[i];
     }
-    buffer[pos++] = 'H';
 
-    return size + 1;
+    return size + 2; // +2 for '0x'
 }
 
 static int uint_to_decimal(char* buffer, int pos, uint64_t uint) {
