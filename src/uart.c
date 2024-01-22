@@ -33,7 +33,7 @@ void uart_handler() {
     }
 }
 
-void uart_init() {
+void init_uart() {
     set_word(UART0_CR, 0);
     set_word(UART0_IBRD, 26);
     set_word(UART0_FBRD, 0);

@@ -16,7 +16,7 @@
 #define UART0_ICR  (IO_BASE + 0x1044)
 
 // init UART baud rate and characteristics
-void uart_init();
+void init_uart();
 
 // receive a single character from UART
 unsigned int uart_recv();

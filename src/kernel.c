@@ -1,13 +1,15 @@
 #include "exception.h"
 #include "debug.h"
 #include "lib.h"
+#include "memory.h"
 #include "print.h"
 #include "uart.h"
 
 void kmain() {
-    uart_init();
+    init_uart();
 
-    init_timer();
+    init_memory();
+    // init_timer();
     init_interrupt_controller();
     enable_irq();
 
@@ -24,6 +26,7 @@ void kmain() {
     // printk("An exception should have happened...\n");
 
     while(1) {
-        // uart_send(uart_getc()); // echo UART input chars back to UART
+        // echo UART input chars back to UART
+        // uart_send(uart_getc());
     }
 }
