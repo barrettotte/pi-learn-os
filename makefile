@@ -41,7 +41,7 @@ $(TARGET): $(OBJECTS)
 
 all: build
 
-build: clean $(TARGET)
+build: clean $(TARGET) dump_kernel
 
 run: build
 	$(QEMU) $(QEMU_FLAGS)
@@ -51,7 +51,7 @@ clean:
 
 dump_kernel:
 	$(OBJDUMP) -d $(TARGET_ELF) > $(BIN_DIR)/$(OS).dump
-	stat --printf="$(BIN_DIR)/$(OS).dump is %s byte(s)\n" $(BIN_DIR)/$(OS).dump
+	@stat --printf="$(BIN_DIR)/$(OS).dump is %s byte(s)\n" $(BIN_DIR)/$(OS).dump
 
 toolchain:
 	@echo 'Setting up cross compiler...'

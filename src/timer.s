@@ -9,6 +9,10 @@ get_timer_freq:                           // ***** fetch timer frequency *****
         mrs x0, CNTFRQ_EL0                //
         ret                               // end get_timer_freq subroutine
 
+get_timer_status:                         // ***** fetch timer status *****
+        mrs x0, CNTP_CTL_EL0              //
+        ret                               // end get_timer_status subroutine
+
 set_timer_interval:                       // ***** set timer interval *****
         msr CNTP_TVAL_EL0, x0             //
         ret                               // end set_timer_interval subroutine
@@ -26,7 +30,3 @@ enable_timer:                             // ***** enable generic timer *****
 
         ldp x29, x30, [sp], #16           // restore registers
         ret                               // end enable_timer subroutine
-
-get_timer_status:                         // ***** fetch timer status *****
-        mrs x0, CNTP_CTL_EL0              //
-        ret                               // end get_timer_status subroutine

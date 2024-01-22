@@ -7,7 +7,7 @@
 void kmain() {
     uart_init();
 
-    // init_timer();
+    init_timer();
     init_interrupt_controller();
     enable_irq();
 

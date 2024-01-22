@@ -26,8 +26,10 @@ pre_kernel:                         // ***** prepare before kernel entry *****
         eret                        // return from exception
 
 el1_entry:                          // 
-        ldr x1, =_start             // 
-        mov sp, x1                  // init stack pointer
+        mov sp, #0x80000            // init stack pointer
+
+        bl setup_vm                 // 
+        bl enable_mmu               // enable memory management unit
 
         ldr x0, =vector_table       //
         msr vbar_el1, x0            // init vector base address register for EL1
@@ -41,5 +43,10 @@ bss_clear:                          // init stack segment data
         cbnz w2, bss_clear          // continue clearing stack segment if w2 != 0
 
 kernel_entry:                       // ***** enter kernel *****
-        bl kmain                    // enter kernel main
+        mov x0, #0xFFFF000000000000 // load kernel base address
+        add sp, sp, x0              // set stack pointer to kernel base address
+
+        ldr x0, =kmain              // load virtual address to kernel main
+        blr x0                      // enter kernel main
+
         b halt                      // halt core just in case

@@ -1,9 +1,9 @@
 #ifndef _UART_H
 #define _UART_H
 
-#include "mmio.h"
+#include "memory.h"
 
-#define IO_BASE (MMIO_BASE + 0x200000)
+#define IO_BASE P2V(0x3f200000)
 
 #define UART0_DR   (IO_BASE + 0x1000)
 #define UART0_FR   (IO_BASE + 0x1018)
