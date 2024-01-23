@@ -17,6 +17,7 @@ delay:                  //
     bne delay           // keep delaying if x0 > 0
     ret                 // end delay
 
+// TODO: move to memory.s
 // *****************************************************************************
 // void set_word(uint64_t addr, uint32_t word)
 //
@@ -26,6 +27,7 @@ set_word:               //
     str w1, [x0]        // store word at address
     ret                 // end set_word
 
+// TODO: move to memory.s
 // *****************************************************************************
 // uint32_t get_word(uint64_t addr)
 //
@@ -35,6 +37,7 @@ get_word:               //
     ldr w0, [x0]        // load word from address
     ret                 // end get_word
 
+// TODO: move to memory.s
 // *****************************************************************************
 // void memset(void* dst, int value, unsigned int size)
 //
@@ -50,6 +53,7 @@ _memset_set:            //
 _memset_end:            //
     ret                 // end memset
 
+// TODO: move to memory.s
 // *****************************************************************************
 // void memcmp(void* a, void* b, unsigned int size)
 //
@@ -72,6 +76,7 @@ _memcmp_cmp:            //
 _memcmp_end:            //
     ret                 // end memcmp
 
+// TODO: move to memory.s
 // *****************************************************************************
 // void memcpy(void* dst, void* src, unsigned int size)
 //

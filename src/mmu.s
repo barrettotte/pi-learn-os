@@ -2,6 +2,7 @@
 
         .global enable_mmu
         .global setup_vm
+        .global load_pgd
 
         .equ MAIR_ATTR, (0x44 << 8)
         .equ TCR_T0SZ,  (16) 
@@ -10,6 +11,17 @@
         .equ TCR_TG1,   (2 << 30)
         .equ TCR_VALUE, (TCR_T0SZ | TCR_T1SZ | TCR_TG0 | TCR_TG1)
         .equ PAGE_SIZE, (2*1024*1024)
+
+load_pgd:                                 // ***** TODO:
+        msr ttbr0_el1, x0                 // load for user space translation
+
+        // invalidate tlb entries and synchronize the context
+
+        tlbi vmallelis                    // TODO:
+        dsb ish                           // TODO:
+        isb                               // TODO:
+
+        ret                               // end load_pgd subroutine
 
 enable_mmu:                               // ***** enable MMU *****
         adr x0, pgd_ttbr1                 // load pointer to translation table 0

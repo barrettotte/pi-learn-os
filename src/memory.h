@@ -1,6 +1,7 @@
 #ifndef _MEMORY_H
 #define _MEMORY_H
 
+#include "stdbool.h"
 #include "stdint.h"
 
 // kernel base address
@@ -24,6 +25,31 @@
 // align page address to previous 2MB boundary, if not aligned
 #define PA_DOWN(v) (((uint64_t) v >> 21) << 21)
 
+// retrieve address of next level entry (global and upper directory table entries)
+#define PDE_ADDR(p) ((uint64_t) p & 0xfffffffffffff000)
+
+// retrieve address of physical page
+#define PTE_ADDR(p) ((uint64_t) p & 0xffffffffffe00000)
+
+//
+#define ENTRY_V (1 << 0)
+
+//
+#define TABLE_ENTRY (1 << 1)
+
+//
+#define BLOCK_ENTRY (0 << 1)
+
+//
+#define ENTRY_ACCESSED (1 << 10)
+
+//
+#define NORMAL_MEMORY (1 << 2)
+
+//
+#define DEVICE_MEMORY (0 << 2)
+
+//
 void init_memory();
 
 // kernel allocate memory
@@ -31,6 +57,15 @@ void* kmalloc();
 
 // kernel free memory
 void kfree(uint64_t v_addr);
+
+//
+bool map_page(uint64_t map, uint64_t v_addr, uint64_t p_page, uint64_t attr);
+
+// setup kernel space virtual memory
+void switch_vm(uint64_t map);
+
+// setup user space virtual memory
+bool setup_uvm();
 
 // used to maintain linked list of pages
 struct Page {
