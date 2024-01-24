@@ -57,7 +57,7 @@ void print_pages() {
 }
 
 static uint64_t* find_pgd_entry(uint64_t map, uint64_t v_addr, int alloc, uint64_t attr) {
-    uint64_t* entry = NULL;
+    uint64_t* entry = (uint64_t*) map;
     void* addr = NULL;
     unsigned int entry_idx = (v_addr >> 39) & 0x1FF;
 
@@ -171,11 +171,10 @@ static void free_pgd(uint64_t map) {
 }
 
 void free_vm(uint64_t map) {
-    // TODO: temp commented out
-    // free_page(map, 0x400000); // free page in user space
-    // free_pmd(map);
-    // free_pud(map);
-    // free_pgd(map);
+    free_page(map, 0x400000); // free page in user space
+    free_pmd(map);
+    free_pud(map);
+    free_pgd(map);
 }
 
 bool setup_uvm() {

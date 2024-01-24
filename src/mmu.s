@@ -17,7 +17,7 @@ load_pgd:                                 // ***** TODO:
 
         // invalidate tlb entries and synchronize the context
 
-        tlbi vmallelis                    // TODO:
+        tlbi vmalle1is                    // TODO:
         dsb ish                           // TODO:
         isb                               // TODO:
 

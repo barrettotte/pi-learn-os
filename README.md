@@ -1,8 +1,25 @@
-# tbd-pi-os
+# pi-learn-os
 
-TBD Raspberry Pi 3B operating system
+A toy Raspberry Pi 3B kernel for learning.
 
-I made this to learn operating system development on a RISC processor for a future project.
+I wanted to learn the basics of operating system development on something besides x86.
+
+## Implemented
+
+- UART
+- Exception level switching
+- Basic interrupt handling
+- Generic timer
+- MMU and paging
+
+## Unimplemented
+
+- Mailboxes
+- FAT16 filesystem and disk driver
+- processes and process scheduling
+- system calls
+- ELF and user space programs
+- much more...
 
 ## Development
 

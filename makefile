@@ -53,6 +53,10 @@ dump_kernel:
 	$(OBJDUMP) -d $(TARGET_ELF) > $(BIN_DIR)/$(OS).dump
 	@stat --printf="$(BIN_DIR)/$(OS).dump is %s byte(s)\n" $(BIN_DIR)/$(OS).dump
 
+# TODO:
+init_disk:
+	@echo 'init_disk rule is not implemented.'
+
 toolchain:
 	@echo 'Setting up cross compiler...'
 	curl -L 'https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf.tar.xz' -o /tmp/gcc-arm-$(AARCH64).tar.xz
